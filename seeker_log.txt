@@ -1,10 +1,16 @@
+Enter port #: 12000
 Connected to creator 127.0.0.1 at port 12000
-Message sent to job-creator
-header : 1
-job : Prostitution
 
-Message sent to job-creator
+Enter services: Services message sent to job-creator
+
+header : 1
+job : job test
+Job message received from job-creator
+
+Enter 1 for accept, 0 for reject: Accept message sent to job-creator
+
 header : 2
 acknowledge : True
+Acknowledge message received from job-creator
 
-Message sent to job-creator
+Completed message sent to job-creator

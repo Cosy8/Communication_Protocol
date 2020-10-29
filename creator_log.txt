@@ -1,14 +1,9 @@
-Job-Creator is ready to recieve Job-Seeker
+Enter port #: Job-Creator is ready to recieve Job-Seeker
 
-Seeker ('127.0.0.1', 62223) accepted at creator address ('127.0.0.1', 12000)
+Seeker ('127.0.0.1', 52451) accepted at creator address ('127.0.0.1', 12000)
 header : 1
-services : services
+services : test services
 
-header : 2
-Accept : True
+Services message received from job-seeker
 
-header : 3
-job : Prostitution
-status : Done
-result : Satisfied
-
+Enter job: 
