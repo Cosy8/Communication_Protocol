@@ -1,9 +1,0 @@
-Enter port #: Job-Creator is ready to recieve Job-Seeker
-
-Seeker ('127.0.0.1', 52451) accepted at creator address ('127.0.0.1', 12000)
-header : 1
-services : test services
-
-Services message received from job-seeker
-
-Enter job: 
