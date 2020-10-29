@@ -1,0 +1,10 @@
+Connected to creator 127.0.0.1 at port 12000
+Message sent to job-creator
+header : 1
+job : Prostitution
+
+Message sent to job-creator
+header : 2
+acknowledge : True
+
+Message sent to job-creator
