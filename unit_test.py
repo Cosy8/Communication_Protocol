@@ -24,14 +24,14 @@ def generate_jobs(number, jobFile='jobs.json', typeFile='job_type.JSON'):
     # Load Job Types
     with open(typeFile) as typeFile:
         types = json.loads(typeFile.read())
-        print("Starting number of job types: " + str(len(types)))
+        # print("Starting number of job types: " + str(len(types)))
     typeFile.close()
 
     # Load Jobs
     with open(jobFile) as file:
         jobs = json.loads(file.read())
         num_jobs = len(jobs)
-        print("Number of jobs in file: " + str(num_jobs))
+        # print("Number of jobs in file: " + str(num_jobs))
     file.close()
 
     for i in range(number):
@@ -48,9 +48,18 @@ def generate_jobs(number, jobFile='jobs.json', typeFile='job_type.JSON'):
     return num_jobs + number
 
 
+def getRandJob(filename):
+    with open(filename, 'r') as f:
+        jobs = json.loads(f.read())
+        random.shuffle(jobs)
+        return jobs[0]
+
+
 # Generate and return a random set of skills with random length
 def generate_skills(filename='skills.txt', **kwargs):
     max_skills = kwargs.get('max_skills', None)
+    if max_skills <= 0:
+        max_skills = 1
     with open(filename) as f:
         lines = f.read().splitlines()
         if len(lines) == 0:
@@ -61,8 +70,3 @@ def generate_skills(filename='skills.txt', **kwargs):
         return random.sample(lines, random.randint(1, max_skills))
     else:
         return random.sample(lines, random.randint(1, num_lines))
-
-
-# print("New total: " + str(generate_jobs(10, 'test.JSON')))
-print(generate_skills(max_skills=5))
-
