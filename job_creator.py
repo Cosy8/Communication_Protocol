@@ -2,9 +2,9 @@ from socket import *
 import json
 
 class creator:
-    creatorPort = 12000
 
-    def __init__(self):
+    def __init__(self, port):
+        self.creatorPort = int(port)
         self.start()
         self.creatorSocket.listen(1)
         print('Job-Creator is ready to recieve Job-Seeker')
@@ -22,18 +22,23 @@ class creator:
             print('\nSeeker ' + str(addr) + ' accepted at creator address ' + str(connection.getsockname()))
 
             #   Recieve services
+            print('Services message received from job-seeker')
             self.decode(connection.recv(1024).decode())
 
             #   Send Job
             connection.send(self.encode(messageType=1, job='computational task'))
+            print('Job message sent to job-seeker\n')
 
             #   Recieve accept
+            print('Accept message received from job-seeker')
             self.decode(connection.recv(1024).decode())
 
             #   Send acknowledge
             connection.send(self.encode(messageType=2, acknowledge=True))
+            print('Acknowledge message sent to job-seeker\n')
 
             #   Recieve completed
+            print('Completed message received from job-seeker')
             self.decode(connection.recv(1024).decode())
             connection.close()
 
@@ -67,4 +72,4 @@ class creator:
         print()
 
 if __name__ == "__main__":
-    creator()
+    creator(input('Enter port #:'))

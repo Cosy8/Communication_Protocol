@@ -3,9 +3,9 @@ import json
 
 class seeker:
     creatorName = '127.0.0.1'
-    creatorPort = 12000
 
-    def __init__(self):
+    def __init__(self, port):
+        self.creatorPort = int(port)
         self.start()
     
     #   Connected to the job creator
@@ -13,25 +13,27 @@ class seeker:
         try:
             self.seekerSocket = socket(AF_INET, SOCK_STREAM)
             self.seekerSocket.connect((self.creatorName,self.creatorPort))
-            print('Connected to creator ' + str(self.creatorName) + ' at port ' + str(self.creatorPort))
+            print('Connected to creator ' + str(self.creatorName) + ' at port ' + str(self.creatorPort) + '\n')
 
             #   Send services
             self.seekerSocket.send(self.encode(messageType=1, services='services'))
-            print('Message sent to job-creator')
+            print('Services message sent to job-creator\n')
 
             #   Recieve job
+            print('Job message received from job-creator')
             self.decode(self.seekerSocket.recv(1024).decode())
 
             #   Send accept
             self.seekerSocket.send(self.encode(messageType=2, accept=True))
-            print('Message sent to job-creator')
+            print('Accept message sent to job-creator\n')
 
             #   Recieve acknowledge
+            print('Acknowledge message received from job-creator')
             self.decode(self.seekerSocket.recv(1024).decode())
 
             #   Send completed
             self.seekerSocket.send(self.encode(messageType=3, job='computational task', status='Done', result='Satisfied'))
-            print('Message sent to job-creator')
+            print('Completed message sent to job-creator')
         except:
             print('***Connection to creator failed***')
 
@@ -74,4 +76,4 @@ class seeker:
         print()
 
 if __name__ == "__main__":
-    seeker()
+    seeker(input('Enter port #: '))
