@@ -1,5 +1,5 @@
 from socket import *
-import json
+import json, sys
 
 class seeker:
     creatorName = '127.0.0.1'
@@ -25,7 +25,11 @@ class seeker:
             print('Job message received from job-creator\n')
 
             #   Send accept
-            self.seekerSocket.send(self.encode(messageType=2, accept=input('Enter 1 for accept, 0 for reject: ')))
+            accept = input('Enter 1 for accept, 0 for reject: ')
+            self.seekerSocket.send(self.encode(messageType=2, accept=accept))
+            if accept == '0':
+                self.seekerSocket.close()
+                sys.exit()
             print('Accept message sent to job-creator\n')
 
             #   Recieve acknowledge

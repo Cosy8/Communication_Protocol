@@ -9,7 +9,8 @@ import os
 def generateCreatorFile(portnumber, seekers):
     with open('creator_in.txt', 'w') as f:
         f.write(str(portnumber))
-        os.remove ('seeker_in.txt')
+        if os.path.exists('seeker_in.txt'):
+            os.remove('seeker_in.txt')
         UT.generate_jobs(seekers)
         for i in range(seekers):
             f.write('\n')
