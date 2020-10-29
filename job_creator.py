@@ -22,24 +22,24 @@ class creator:
             print('\nSeeker ' + str(addr) + ' accepted at creator address ' + str(connection.getsockname()))
 
             #   Recieve services
-            print('Services message received from job-seeker')
             self.decode(connection.recv(1024).decode())
+            print('Services message received from job-seeker\n')
 
             #   Send Job
-            connection.send(self.encode(messageType=1, job='computational task'))
+            connection.send(self.encode(messageType=1, job=input('Enter job: ')))
             print('Job message sent to job-seeker\n')
 
             #   Recieve accept
-            print('Accept message received from job-seeker')
             self.decode(connection.recv(1024).decode())
+            print('Accept message received from job-seeker\n')
 
             #   Send acknowledge
             connection.send(self.encode(messageType=2, acknowledge=True))
             print('Acknowledge message sent to job-seeker\n')
 
             #   Recieve completed
-            print('Completed message received from job-seeker')
             self.decode(connection.recv(1024).decode())
+            print('Completed message received from job-seeker\n')
             connection.close()
 
     #   Encode the message format
@@ -72,4 +72,4 @@ class creator:
         print()
 
 if __name__ == "__main__":
-    creator(input('Enter port #:'))
+    creator(input('Enter port #: '))

@@ -16,20 +16,20 @@ class seeker:
             print('Connected to creator ' + str(self.creatorName) + ' at port ' + str(self.creatorPort) + '\n')
 
             #   Send services
-            self.seekerSocket.send(self.encode(messageType=1, services='services'))
+            self.seekerSocket.send(self.encode(messageType=1, services=input('Enter services: ')))
             print('Services message sent to job-creator\n')
 
             #   Recieve job
-            print('Job message received from job-creator')
             self.decode(self.seekerSocket.recv(1024).decode())
+            print('Job message received from job-creator\n')
 
             #   Send accept
-            self.seekerSocket.send(self.encode(messageType=2, accept=True))
+            self.seekerSocket.send(self.encode(messageType=2, accept=input('Enter 1 for accept, 0 for reject: ')))
             print('Accept message sent to job-creator\n')
 
             #   Recieve acknowledge
-            print('Acknowledge message received from job-creator')
             self.decode(self.seekerSocket.recv(1024).decode())
+            print('Acknowledge message received from job-creator\n')
 
             #   Send completed
             self.seekerSocket.send(self.encode(messageType=3, job='computational task', status='Done', result='Satisfied'))
@@ -73,7 +73,6 @@ class seeker:
         messageDecoded = json.loads(message)
         for key in messageDecoded:
             print(key + ' : ' + str(messageDecoded.get(key)))
-        print()
 
 if __name__ == "__main__":
     seeker(input('Enter port #: '))
