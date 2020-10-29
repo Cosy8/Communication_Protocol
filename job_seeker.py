@@ -33,7 +33,7 @@ class seeker:
             print('Acknowledge message received from job-creator\n')
 
             #   Send completed
-            self.seekerSocket.send(self.encode(messageType=3, job='computational task', status='Done', result='Satisfied'))
+            self.seekerSocket.send(self.encode(messageType=3, job=input('Enter job id: '), status=input('Enter status: '), result=input('Enter result: ')))
             print('Completed message sent to job-creator')
         except:
             print('***Connection to creator failed***')

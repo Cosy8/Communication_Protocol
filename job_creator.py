@@ -69,7 +69,6 @@ class creator:
         messageDecoded = json.loads(message)
         for key in messageDecoded:
             print(key + ' : ' + str(messageDecoded.get(key)))
-        print()
 
 if __name__ == "__main__":
     creator(input('Enter port #: '))
