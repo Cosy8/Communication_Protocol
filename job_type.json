@@ -1,0 +1,13 @@
+[
+  {
+    "id": "0",
+    "job_type": "Computational Task",
+    "required_skill": "Computational Resource"
+  },
+
+  {
+    "id": "1",
+    "job_type": "Template Job Type",
+    "required_skill": "Template Skill"
+  }
+]

@@ -1,0 +1,14 @@
+Job-Creator is ready to recieve Job-Seeker
+
+Seeker ('127.0.0.1', 62223) accepted at creator address ('127.0.0.1', 12000)
+header : 1
+services : services
+
+header : 2
+Accept : True
+
+header : 3
+job : Prostitution
+status : Done
+result : Satisfied
+
