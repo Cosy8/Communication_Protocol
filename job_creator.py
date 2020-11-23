@@ -26,7 +26,7 @@ class creator:
             print('Services message received from job-seeker\n')
 
             #   Send Job
-            connection.send(self.encode(messageType=1, job=input('Enter job: ')))
+            connection.send(self.encode(messageType=1, job=input('Enter job (1-4): ')))
             print('Job message sent to job-seeker\n')
 
             #   Recieve accept
@@ -46,8 +46,9 @@ class creator:
     #   messageType -The type of message being sent
     #   job         -The job
     #   acknowledge -Boolean for acknowledging the response from the seeker
+    #   ip          -T
     #   Returns the encoded message
-    def encode(self, messageType, job='', acknowledge=True):
+    def encode(self, messageType, job='', acknowledge=True, ip=''):
         message = {}    #!Temp dictionary
 
         #   Switch case for different message types
